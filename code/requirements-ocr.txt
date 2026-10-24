@@ -1,0 +1,2 @@
+# Optional portable CPU OCR. Installs bundled models; runtime extraction is offline.
+rapidocr-onnxruntime==1.4.4
