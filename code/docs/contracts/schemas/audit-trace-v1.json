@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/audit-trace-v1.json",
+  "title": "BuyWait Audit Trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trace_id", "request_id", "created_at", "input_fingerprint", "stages", "selected_candidate_id", "decision_fingerprint"],
+  "properties": {
+    "schema_version": {"const": "buywait.audit-trace.v1"},
+    "trace_id": {"type": "string", "minLength": 1},
+    "request_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "input_fingerprint": {"type": "string", "minLength": 1},
+    "selected_candidate_id": {"type": ["string", "null"]},
+    "decision_fingerprint": {"type": "string", "minLength": 1},
+    "stages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["sequence", "stage", "rule_version", "input_ids", "output_ids", "reason_codes", "summary"],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1},
+          "stage": {"enum": ["ingestion", "evidence", "lifecycle", "recurrence", "forecast", "candidate_generation", "safety", "ranking", "serialization"]},
+          "rule_version": {"type": "string", "minLength": 1},
+          "input_ids": {"type": "array", "items": {"type": "string"}},
+          "output_ids": {"type": "array", "items": {"type": "string"}},
+          "reason_codes": {"type": "array", "items": {"type": "string"}},
+          "summary": {"type": "string"}
+        }
+      }
+    }
+  }
+}

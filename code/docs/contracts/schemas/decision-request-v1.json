@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/decision-request-v1.json",
+  "title": "BuyWait Decision API Request v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id"],
+  "properties": {
+    "schema_version": {"const": "buywait.decision-request.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "input_ref": {
+      "type": ["string", "null"],
+      "description": "Opaque adapter-owned reference; never interpreted by the domain.",
+      "default": null
+    },
+    "include_audit_trace": {"type": "boolean", "default": true},
+    "provider_overrides": {
+      "type": "object",
+      "additionalProperties": {"type": "string"},
+      "default": {}
+    }
+  }
+}

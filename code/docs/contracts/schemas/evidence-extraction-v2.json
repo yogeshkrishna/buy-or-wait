@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/evidence-extraction-v2.json",
+  "title": "Resolved financial evidence v2 (private; CLI redaction is a projection)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "request_id",
+    "facts",
+    "issues",
+    "conflicts",
+    "mandatory_event_ids",
+    "resolved_event_ids",
+    "cache_hits"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "buywait.evidence-extraction.v2"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_id",
+          "fact_type",
+          "value",
+          "provenance",
+          "related_event_id",
+          "effective_date",
+          "currency",
+          "confidence",
+          "notes",
+          "subject",
+          "scope",
+          "explicit",
+          "support_ref"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": "string"
+          },
+          "fact_type": {
+            "enum": [
+              "amount",
+              "currency",
+              "effective_date",
+              "settlement_date",
+              "status",
+              "recurrence",
+              "amendment",
+              "cancellation",
+              "settlement",
+              "internal_transfer",
+              "cash_state"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "boolean",
+              "null"
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "source_kind",
+              "source_id",
+              "observed_at",
+              "content_hash",
+              "provider",
+              "schema_version",
+              "source_identity"
+            ],
+            "properties": {
+              "source_kind": {
+                "enum": [
+                  "csv_event",
+                  "message",
+                  "image",
+                  "ocr",
+                  "model",
+                  "user_correction"
+                ]
+              },
+              "source_id": {
+                "type": "string"
+              },
+              "observed_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "content_hash": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "schema_version": {
+                "const": "buywait.evidence.v2"
+              },
+              "source_identity": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "related_event_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "effective_date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "currency": {
+            "enum": [
+              "EUR",
+              "IDR",
+              "INR",
+              "USD",
+              "ZAR",
+              null
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "pattern": "^(0(\\.[0-9]+)?|1(\\.0+)?)$"
+          },
+          "notes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "subject": {
+            "enum": [
+              "event",
+              "salary",
+              "bonus",
+              "commission",
+              "arrears",
+              "rent",
+              "childcare",
+              "payout",
+              "refund",
+              "transfer",
+              "investment",
+              "prize",
+              "service",
+              "expense"
+            ]
+          },
+          "scope": {
+            "enum": [
+              "one_time",
+              "recurring",
+              "next_cycle",
+              "historical"
+            ]
+          },
+          "explicit": {
+            "type": "boolean"
+          },
+          "support_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "reason_code",
+          "related_event_id",
+          "mandatory"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "reason_code": {
+            "type": "string"
+          },
+          "related_event_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "mandatory": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_ids",
+          "selected_fact_id",
+          "reason_code"
+        ],
+        "properties": {
+          "fact_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "selected_fact_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "reason_code": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "mandatory_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "resolved_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "cache_hits": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

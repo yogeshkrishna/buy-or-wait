@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/ledger-trace-v1.json",
+  "title": "BuyWait redacted canonical-ledger trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "user_id", "as_of_date", "home_currency", "balance_anchor", "fingerprint", "counts", "disposition_counts", "forecast_flow_counts", "evidence_action_counts", "actionable_dispositions", "multi_event_lifecycles", "warnings", "invariants"],
+  "properties": {
+    "schema_version": {"const": "buywait.ledger-trace.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "user_id": {"type": "string", "minLength": 1},
+    "as_of_date": {"type": "string", "format": "date"},
+    "home_currency": {"enum": ["EUR", "IDR", "INR", "USD", "ZAR"]},
+    "balance_anchor": {"const": "profile_current_available_balance_not_replayed"},
+    "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "disposition_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "forecast_flow_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "evidence_action_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+    "actionable_dispositions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["event_id", "disposition", "rule_code", "explanation"],
+        "properties": {
+          "event_id": {"type": "string"},
+          "disposition": {"type": "string"},
+          "rule_code": {"type": "string"},
+          "explanation": {"type": "string"}
+        }
+      }
+    },
+    "multi_event_lifecycles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["lifecycle_id", "event_ids", "disposition", "reason_codes"],
+        "properties": {
+          "lifecycle_id": {"type": "string"},
+          "event_ids": {"type": "array", "items": {"type": "string"}},
+          "disposition": {"type": "string"},
+          "reason_codes": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "message", "related_ids"],
+        "properties": {
+          "code": {"type": "string"},
+          "message": {"type": "string"},
+          "related_ids": {"type": "array", "items": {"type": "string"}}
+        }
+      }
+    },
+    "invariants": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["one_disposition_per_event", "pending_credits_in_forecast", "historical_flows_mutate_anchor", "all_forecast_flows_are_nonhistorical"],
+      "properties": {
+        "one_disposition_per_event": {"type": "boolean"},
+        "pending_credits_in_forecast": {"type": "integer", "minimum": 0},
+        "historical_flows_mutate_anchor": {"type": "boolean"},
+        "all_forecast_flows_are_nonhistorical": {"type": "boolean"}
+      }
+    }
+  }
+}

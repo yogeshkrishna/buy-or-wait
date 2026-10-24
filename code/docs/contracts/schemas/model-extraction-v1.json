@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/model-extraction-v1.json",
+  "title": "Untrusted model extraction (server binds all provenance)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "transcription",
+    "facts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "buywait.model-extraction.v1"
+    },
+    "transcription": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_type",
+          "subject",
+          "scope",
+          "value",
+          "currency",
+          "effective_date",
+          "explicit",
+          "confidence",
+          "supporting_quote"
+        ],
+        "properties": {
+          "fact_type": {
+            "type": "string",
+            "enum": [
+              "amount",
+              "effective_date",
+              "settlement_date",
+              "status",
+              "recurrence",
+              "amendment",
+              "cancellation",
+              "settlement",
+              "internal_transfer",
+              "cash_state"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "enum": [
+              "event",
+              "salary",
+              "bonus",
+              "commission",
+              "arrears",
+              "rent",
+              "childcare",
+              "payout",
+              "refund",
+              "transfer",
+              "investment",
+              "prize",
+              "service",
+              "expense"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "one_time",
+              "recurring",
+              "next_cycle",
+              "historical"
+            ]
+          },
+          "value": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "currency": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "EUR",
+              "IDR",
+              "INR",
+              "USD",
+              "ZAR",
+              null
+            ]
+          },
+          "effective_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "explicit": {
+            "type": "boolean"
+          },
+          "confidence": {
+            "type": "string"
+          },
+          "supporting_quote": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

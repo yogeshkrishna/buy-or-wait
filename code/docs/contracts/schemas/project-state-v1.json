@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/project-state-v1.json",
+  "title": "BuyWait Project State v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "updated_at", "current_phase", "completed_phases", "stable_interfaces", "important_paths", "commands", "metrics", "decisions", "risks", "external_inputs", "next_phase"],
+  "properties": {
+    "schema_version": {"const": "buywait.project-state.v1"},
+    "project": {"const": "buy-or-wait"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "current_phase": {"$ref": "#/$defs/phase"},
+    "completed_phases": {"type": "array", "items": {"type": "object"}},
+    "stable_interfaces": {"type": "array", "items": {"type": "object"}},
+    "important_paths": {"type": "object", "additionalProperties": {"type": "string"}},
+    "commands": {"type": "object", "additionalProperties": {"type": "string"}},
+    "metrics": {"type": "object"},
+    "decisions": {"type": "array", "items": {"type": "object"}},
+    "risks": {"type": "array", "items": {"type": "object"}},
+    "external_inputs": {"type": "array", "items": {"type": "object"}},
+    "next_phase": {"$ref": "#/$defs/phase"}
+  },
+  "$defs": {
+    "phase": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[0-9]{2}$"},
+        "name": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

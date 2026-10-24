@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/decision-trace-v1.json",
+  "title": "BuyWait redacted decision trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "decision", "candidates", "winner", "search_fingerprint"],
+  "properties": {
+    "schema_version": {"const": "buywait.decision-trace.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "method", "payment_count", "change_event_ids", "amount_safe_to_pay", "earliest_date_for_full_payment", "audit_trace_id"],
+      "properties": {
+        "status": {"enum": ["affordable_now", "affordable_with_plan", "affordable_later", "not_affordable"]},
+        "method": {"enum": ["full_payment", "partial_payment", "installments", "wait", "not_recommended"]},
+        "payment_count": {"type": "integer", "minimum": 0},
+        "change_event_ids": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+        "amount_safe_to_pay": {"const": "[REDACTED]"},
+        "earliest_date_for_full_payment": {"type": ["string", "null"], "format": "date"},
+        "audit_trace_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "candidates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "by_method", "eligible_by_method", "rejection_counts", "rejected_preview"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 1},
+        "by_method": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "eligible_by_method": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "rejection_counts": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "rejected_preview": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["candidate_id", "method", "payment_option_id", "codes"],
+            "properties": {
+              "candidate_id": {"type": "string"},
+              "method": {"type": "string"},
+              "payment_option_id": {"type": ["string", "null"]},
+              "codes": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    "winner": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidate_id", "payment_option_id", "rank_key", "safety_fingerprint", "minimum_projected_balance"],
+          "properties": {
+            "candidate_id": {"type": "string"},
+            "payment_option_id": {"type": ["string", "null"]},
+            "rank_key": {"type": "array", "minItems": 6, "maxItems": 6, "items": {"type": "string"}},
+            "safety_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+            "minimum_projected_balance": {"const": "[REDACTED]"}
+          }
+        }
+      ]
+    },
+    "search_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

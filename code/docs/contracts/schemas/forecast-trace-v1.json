@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/forecast-trace-v1.json",
+  "title": "BuyWait redacted 90-day forecast trace v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "horizon", "recurrence", "timeline", "capacity"],
+  "properties": {
+    "schema_version": {"const": "buywait.forecast-trace.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "horizon": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end", "inclusive_days"],
+      "properties": {
+        "start": {"type": "string", "format": "date"},
+        "end": {"type": "string", "format": "date"},
+        "inclusive_days": {"const": 91}
+      }
+    },
+    "recurrence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_count", "cadences", "amount_strategies", "rules"],
+      "properties": {
+        "rule_count": {"type": "integer", "minimum": 0},
+        "cadences": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "amount_strategies": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["rule_id", "semantic_key", "cadence", "interval", "observed_count", "source_event_count", "source_event_ids_preview", "evidence_fact_ids", "amount"],
+            "properties": {
+              "rule_id": {"type": "string"},
+              "semantic_key": {"type": "string"},
+              "cadence": {"enum": ["daily", "weekly", "biweekly", "monthly", "custom_days"]},
+              "interval": {"type": "integer", "minimum": 1},
+              "observed_count": {"type": "integer", "minimum": 0},
+              "source_event_count": {"type": "integer", "minimum": 1},
+              "source_event_ids_preview": {"type": "array", "maxItems": 3, "items": {"type": "string"}},
+              "evidence_fact_ids": {"type": "array", "items": {"type": "string"}},
+              "amount": {"const": "[REDACTED]"}
+            }
+          }
+        }
+      }
+    },
+    "timeline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["occurrence_count", "origins", "unresolved_event_ids", "fingerprint"],
+      "properties": {
+        "occurrence_count": {"type": "integer", "minimum": 0},
+        "origins": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "unresolved_event_ids": {"type": "array", "items": {"type": "string"}},
+        "fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "capacity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["amount_safe_to_pay", "earliest_date_for_full_payment", "baseline_safe", "tightest_date", "minimum_projected_balance", "violation_codes", "simulation_fingerprint"],
+      "properties": {
+        "amount_safe_to_pay": {"const": "[REDACTED]"},
+        "earliest_date_for_full_payment": {"type": ["string", "null"], "format": "date"},
+        "baseline_safe": {"type": "boolean"},
+        "tightest_date": {"type": ["string", "null"], "format": "date"},
+        "minimum_projected_balance": {"const": "[REDACTED]"},
+        "violation_codes": {"type": "array", "items": {"type": "string"}},
+        "simulation_fingerprint": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    }
+  }
+}

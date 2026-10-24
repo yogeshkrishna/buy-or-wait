@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/evidence-extraction-v1.json",
+  "title": "BuyWait Evidence Extraction v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "request_id", "facts", "unresolved_items"],
+  "properties": {
+    "schema_version": {"const": "buywait.evidence-extraction.v1"},
+    "request_id": {"type": "string", "minLength": 1},
+    "facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["fact_id", "fact_type", "value", "provenance", "confidence"],
+        "properties": {
+          "fact_id": {"type": "string", "minLength": 1},
+          "fact_type": {
+            "enum": ["amount", "currency", "effective_date", "settlement_date", "status", "recurrence", "amendment", "cancellation", "settlement", "internal_transfer", "cash_state"]
+          },
+          "value": {"type": ["string", "boolean", "null"]},
+          "related_event_id": {"type": ["string", "null"]},
+          "effective_date": {"type": ["string", "null"], "format": "date"},
+          "currency": {"type": ["string", "null"], "enum": ["EUR", "IDR", "INR", "USD", "ZAR", null]},
+          "confidence": {"type": "string", "pattern": "^(0(\\.[0-9]+)?|1(\\.0+)?)$"},
+          "notes": {"type": "array", "items": {"type": "string"}},
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_kind", "source_id", "schema_version"],
+            "properties": {
+              "source_kind": {"enum": ["csv_event", "message", "image", "ocr", "model", "user_correction"]},
+              "source_id": {"type": "string", "minLength": 1},
+              "observed_at": {"type": ["string", "null"], "format": "date-time"},
+              "content_hash": {"type": ["string", "null"]},
+              "provider": {"type": ["string", "null"]},
+              "schema_version": {"const": "buywait.evidence.v1"}
+            }
+          }
+        }
+      }
+    },
+    "unresolved_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["source_id", "reason_code", "safe_fallback"],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "reason_code": {"type": "string", "minLength": 1},
+          "safe_fallback": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+}

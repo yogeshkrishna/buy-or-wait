@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://buywait.local/schemas/provider-capability-v1.json",
+  "title": "BuyWait Provider Capability v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "provider_id", "kind", "provider_version", "available", "configured", "operations", "schema_versions", "requires_network", "health_detail"],
+  "properties": {
+    "schema_version": {"const": "buywait.provider-capability.v1"},
+    "provider_id": {"type": "string", "minLength": 1},
+    "kind": {"enum": ["evidence", "ocr", "model", "import", "export", "storage", "telemetry", "policy"]},
+    "provider_version": {"type": "string", "minLength": 1},
+    "available": {"type": "boolean"},
+    "configured": {"type": "boolean"},
+    "operations": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "schema_versions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "requires_network": {"type": "boolean"},
+    "health_detail": {"type": ["string", "null"]}
+  }
+}
